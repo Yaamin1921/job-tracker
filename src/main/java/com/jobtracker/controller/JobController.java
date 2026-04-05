@@ -1,6 +1,7 @@
 package com.jobtracker.controller;
 
 import com.jobtracker.dto.JobDto;
+import com.jobtracker.dto.UpdateJobStatusRequest;
 import com.jobtracker.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,9 +39,9 @@ public class JobController {
     @PutMapping("/{id}/status")
     public ResponseEntity<JobDto> updateStatus(
             @PathVariable Long id,
-            @RequestParam String status) {
+             @RequestBody UpdateJobStatusRequest request) {
 
-        return ResponseEntity.ok(jobService.updateJobStatus(id, status));
+        return ResponseEntity.ok(jobService.updateJobStatus(id, request.getStatus()));
     }
 
     // DELETE
