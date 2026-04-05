@@ -1,4 +1,4 @@
-package com.jobtracker.job_tracker;
+package com.jobtracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
