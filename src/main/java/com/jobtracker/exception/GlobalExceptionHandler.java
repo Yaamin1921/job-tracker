@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex) {
         var message=ErrorResponse.builder()
                 .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)

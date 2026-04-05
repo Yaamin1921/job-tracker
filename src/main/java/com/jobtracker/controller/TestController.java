@@ -1,6 +1,6 @@
 package com.jobtracker.controller;
 
-import com.jobtracker.entity.TestEntity;
+import com.jobtracker.entity.TestJobEntity;
 import com.jobtracker.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ public class TestController {
     private final TestService service;
 
     @PostMapping
-    public TestEntity create(@RequestParam String name) {
+    public TestJobEntity create(@RequestParam String name) {
         return service.create(name);
     }
 }

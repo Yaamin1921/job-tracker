@@ -1,7 +1,7 @@
 package com.jobtracker.service;
 
 
-import com.jobtracker.entity.TestEntity;
+import com.jobtracker.entity.TestJobEntity;
 import com.jobtracker.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,8 @@ public class TestService {
 
     private final TestRepository repository;
 
-    public TestEntity create(String name) {
-        TestEntity entity = TestEntity.builder()
+    public TestJobEntity create(String name) {
+        TestJobEntity entity = TestJobEntity.builder()
                 .name(name)
                 .build();
         return repository.save(entity);
