@@ -1,5 +1,6 @@
 package com.jobtracker.controller;
 
+import com.jobtracker.dto.ActivityDto;
 import com.jobtracker.dto.JobDto;
 import com.jobtracker.entity.Activity;
 import com.jobtracker.entity.JobStatus;
@@ -52,8 +53,9 @@ public class JobController {
         return ResponseEntity.ok("Job deleted successfully");
     }
 
+    //get timeline
     @GetMapping("/{id}/timeline")
-    public ResponseEntity<List<Activity>> getTimeline(@PathVariable Long id) {
+    public ResponseEntity<List<ActivityDto>> getTimeline(@PathVariable Long id) {
         return ResponseEntity.ok(jobService.getTimeline(id));
     }
 }

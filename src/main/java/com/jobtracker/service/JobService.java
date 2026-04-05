@@ -1,5 +1,6 @@
 package com.jobtracker.service;
 
+import com.jobtracker.dto.ActivityDto;
 import com.jobtracker.dto.JobDto;
 import com.jobtracker.entity.Activity;
 import com.jobtracker.entity.JobStatus;
@@ -17,5 +18,5 @@ public interface JobService {
 
     void deleteJob(Long id);
 
-    List<Activity> getTimeline(Long id);
+    List<ActivityDto> getTimeline(Long id);
 }
