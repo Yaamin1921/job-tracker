@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TestEntity extends BaseEntity {
+public class TestJobEntity extends BaseJobEntity {
 
     private String name;
 }

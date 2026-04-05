@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 @Setter
-public abstract class BaseEntity {
+public abstract class BaseJobEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
