@@ -1,13 +1,17 @@
 package com.jobtracker.service.impl;
 
 import com.jobtracker.dto.JobDto;
+import com.jobtracker.entity.Activity;
+import com.jobtracker.entity.ActivityType;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.JobStatus;
+import com.jobtracker.repository.ActivityRepository;
 import com.jobtracker.repository.JobRepository;
 import com.jobtracker.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +21,7 @@ import java.util.Set;
 public class JobServiceImpl implements JobService {
 
     private final JobRepository jobRepository;
+    private final ActivityRepository activityRepository;
 
     // ✅ Allowed transitions map
     private static final EnumMap<JobStatus, Set<JobStatus>> allowedTransitions = new EnumMap<>(JobStatus.class);
@@ -49,6 +54,16 @@ public class JobServiceImpl implements JobService {
     public JobDto createJob(JobDto jobDto) {
         Job job = mapToEntity(jobDto);
         Job savedJob = jobRepository.save(job);
+
+        Activity activity = Activity.builder()
+                .jobId(savedJob.getId())
+                .action(ActivityType.CREATED)
+                .notes("Job created for company: " + job.getCompanyName())
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        activityRepository.save(activity);
+
         return mapToDto(savedJob);
     }
 
@@ -81,8 +96,18 @@ public class JobServiceImpl implements JobService {
             );
         }
         job.setStatus(newStatus);
-
         var jobs= jobRepository.save(job);
+
+        // 🔥 CREATE ACTIVITY
+        Activity activity = Activity.builder()
+                .jobId(jobId)
+                .action(ActivityType.STATUS_CHANGED)
+                .notes("Status changed from " + currentStatus + " to " + newStatus)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        activityRepository.save(activity);
+
         return mapToDto(jobs);
     }
     private boolean isValidTransition(JobStatus current, JobStatus next) {
@@ -95,6 +120,11 @@ public class JobServiceImpl implements JobService {
             throw new RuntimeException("Job not found with id: " + id);
         }
         jobRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Activity> getTimeline(Long id) {
+        return activityRepository.findByJobIdOrderByTimestampDesc(id);
     }
 
     // 🔁 Mappers

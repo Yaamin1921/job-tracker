@@ -1,6 +1,7 @@
 package com.jobtracker.controller;
 
 import com.jobtracker.dto.JobDto;
+import com.jobtracker.entity.Activity;
 import com.jobtracker.entity.JobStatus;
 import com.jobtracker.service.JobService;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,10 @@ public class JobController {
     public ResponseEntity<String> deleteJob(@PathVariable Long id) {
         jobService.deleteJob(id);
         return ResponseEntity.ok("Job deleted successfully");
+    }
+
+    @GetMapping("/{id}/timeline")
+    public ResponseEntity<List<Activity>> getTimeline(@PathVariable Long id) {
+        return ResponseEntity.ok(jobService.getTimeline(id));
     }
 }
