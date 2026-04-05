@@ -1,5 +1,8 @@
 package com.jobtracker.entity;
 
+import lombok.Getter;
+
+@Getter
 public enum JobStatus {
     SAVED,
     APPLIED,
@@ -7,5 +10,7 @@ public enum JobStatus {
     INTERVIEW,
     OFFERED,
     REJECTED,
-    NO_RESPONSE
+    NO_RESPONSE;
+
+    private String status;
 }

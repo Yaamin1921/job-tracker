@@ -1,7 +1,6 @@
 package com.jobtracker.service.impl;
 
 import com.jobtracker.dto.JobDto;
-import com.jobtracker.dto.UpdateJobStatusRequest;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.JobStatus;
 import com.jobtracker.repository.JobRepository;
