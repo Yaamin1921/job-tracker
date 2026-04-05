@@ -1,5 +1,6 @@
 package com.jobtracker.dto;
 
+import com.jobtracker.entity.JobStatus;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ public class JobDto {
     private Long id;
     private String companyName;
     private String role;
-    private String status;
+    private JobStatus status;
     private LocalDate appliedDate;
     private String source;
 }

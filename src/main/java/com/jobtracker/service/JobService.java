@@ -1,6 +1,7 @@
 package com.jobtracker.service;
 
 import com.jobtracker.dto.JobDto;
+import com.jobtracker.entity.JobStatus;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface JobService {
 
     JobDto getJobById(Long id);
 
-    JobDto updateJobStatus(Long id, String status);
+    JobDto updateJobStatus(Long id, JobStatus status);
 
     void deleteJob(Long id);
 }

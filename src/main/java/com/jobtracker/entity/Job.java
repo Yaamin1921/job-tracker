@@ -21,13 +21,17 @@ public class Job extends BaseJobEntity {
 
     private String companyName;
     private String role;
-    private String status;
+   // private String status;
 
     private LocalDate appliedDate;
     private String source;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JobStatus status = JobStatus.SAVED;
 
     @PrePersist
     public void prePersist() {
