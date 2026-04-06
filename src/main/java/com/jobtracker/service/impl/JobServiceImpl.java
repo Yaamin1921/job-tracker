@@ -1,5 +1,6 @@
 package com.jobtracker.service.impl;
 
+import com.jobtracker.dto.ActivityDto;
 import com.jobtracker.dto.JobDto;
 import com.jobtracker.entity.Activity;
 import com.jobtracker.entity.ActivityType;
@@ -9,6 +10,7 @@ import com.jobtracker.repository.ActivityRepository;
 import com.jobtracker.repository.JobRepository;
 import com.jobtracker.service.JobService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class JobServiceImpl implements JobService {
 
+    private final ModelMapper mapper;
     private final JobRepository jobRepository;
     private final ActivityRepository activityRepository;
 
@@ -123,8 +126,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Activity> getTimeline(Long id) {
-        return activityRepository.findByJobIdOrderByTimestampDesc(id);
+    public List<ActivityDto> getTimeline(Long id) {
+        var activities=activityRepository.findByJobIdOrderByTimestampDesc(id);
+        var activityDtoList=activities.stream().map(entity->mapper.map(entity,ActivityDto.class)).toList();
+        return activityDtoList;
+
     }
 
     // 🔁 Mappers
