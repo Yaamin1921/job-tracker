@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:jobtracker;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:databse-init-scripts/postgres.sql
+
+  h2:
+    console:
+      enabled: true
