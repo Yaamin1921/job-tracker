@@ -3,12 +3,15 @@ package com.jobtracker.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "reminders")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reminder {
@@ -19,7 +22,7 @@ public class Reminder {
 
     private Long jobId;
 
-    private LocalDateTime reminderTime;
+    private OffsetDateTime reminderTime;
 
     @Enumerated(EnumType.STRING)
     private ReminderType type;
