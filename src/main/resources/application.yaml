@@ -7,7 +7,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/job_tracker
     username: postgres
-    password: 7310
+    password:
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,4 +23,6 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
+    com.jobtracker: INFO
+#    org.hibernate.SQL: DEBUG
+

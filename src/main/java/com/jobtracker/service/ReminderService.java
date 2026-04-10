@@ -8,4 +8,5 @@ import com.jobtracker.entity.ReminderType;
 
 public interface ReminderService {
      ReminderDto createReminder(ReminderRequest reminderRequest);
+     void processReminders();
 }
