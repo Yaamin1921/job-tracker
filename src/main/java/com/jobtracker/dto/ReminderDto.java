@@ -17,8 +17,7 @@ import java.time.OffsetDateTime;
 public class ReminderDto {
     private Long jobId;
     private OffsetDateTime reminderTime;
-
     private ReminderType type;
-
     private ReminderStatus status;
+    private String email;
 }
