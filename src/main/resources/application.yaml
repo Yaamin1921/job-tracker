@@ -15,7 +15,20 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+  # configured SMTP using Gmail with TLS encryption and app-based authentication to securely send emails from  Spring Boot application.
+  mail:
+    host: smtp.gmail.com    #Simple Mail Transfer Protocol  #job-tracker app → smtp.gmail.com → receiver inbox
+    port: 587
+    username: yaamin1921413@gmail.com
+    password: wdjv cwmn mogk jbiv         #Authenticate app with Gmail
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true   #Enables TLS encryption -->Encrypts communication,Prevents hacking/sniffing
+            #Without TLS → data visible
+            #With TLS → data encrypted
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
@@ -25,4 +38,5 @@ logging:
   level:
     com.jobtracker: INFO
 #    org.hibernate.SQL: DEBUG
+
 
