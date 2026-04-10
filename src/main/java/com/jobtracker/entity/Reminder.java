@@ -29,4 +29,6 @@ public class Reminder {
 
     @Enumerated(EnumType.STRING)
     private ReminderStatus status;
+
+    private String email;
 }

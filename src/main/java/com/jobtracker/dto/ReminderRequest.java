@@ -11,7 +11,6 @@ import java.time.OffsetDateTime;
 @Data
 public class ReminderRequest {
     private Long jobId;
-
     private OffsetDateTime reminderTime;
 
     @Schema(
@@ -19,6 +18,6 @@ public class ReminderRequest {
             allowableValues = {"FOLLOW_UP", "INTERVIEW"}
     )
     private ReminderType type;
-
+    private String email;
 
 }
