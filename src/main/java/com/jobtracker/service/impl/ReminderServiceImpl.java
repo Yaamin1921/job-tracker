@@ -6,16 +6,21 @@ import com.jobtracker.entity.Reminder;
 import com.jobtracker.entity.ReminderStatus;
 import com.jobtracker.entity.ReminderType;
 import com.jobtracker.repository.ReminderRepository;
+import com.jobtracker.service.NotificationService;
 import com.jobtracker.service.ReminderService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
     private final ReminderRepository reminderRepository;
     private final ModelMapper mapper;
+    private final NotificationService notificationService;
 
     @Override
     public ReminderDto createReminder(ReminderRequest reminderRequest) {
@@ -26,6 +31,23 @@ public class ReminderServiceImpl implements ReminderService {
                 .build();
         Reminder savedReminder= reminderRepository.save(reminder);
         return mapper.map(savedReminder,ReminderDto.class);
+    }
+
+    public List<Reminder> getDueReminders(){
+        List<Reminder> reminders= reminderRepository.findByReminderTimeBeforeAndStatus(LocalDateTime.now(),ReminderStatus.PENDING);
+      //  return reminders.stream().map(reminder->mapper.map(reminder,ReminderDto.class)).toList();
+        return reminders;
+    }
+
+    public void processReminders(){
+        List<Reminder> reminderList=getDueReminders();
+
+        for(Reminder reminder : reminderList){
+            notificationService.sendReminder(reminder);
+            reminder.setStatus(ReminderStatus.SENT);
+            reminderRepository.save(reminder);
+        }
+
     }
 
 }
