@@ -3,12 +3,14 @@ package com.jobtracker.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jobtracker.entity.ReminderType;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Data
+@Builder
 public class ReminderRequest {
     private Long jobId;
     private OffsetDateTime reminderTime;

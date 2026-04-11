@@ -1,0 +1,71 @@
+[ {
+  "id" : 1,
+  "companyName" : "Google",
+  "role" : "Backend Developer",
+  "status" : "APPLIED",
+  "appliedDate" : "2026-04-01",
+  "source" : "LinkedIn"
+}, {
+  "id" : 2,
+  "companyName" : "Amazon",
+  "role" : "SDE",
+  "status" : "INTERVIEW",
+  "appliedDate" : "2026-04-02",
+  "source" : "Referral"
+}, {
+  "id" : 3,
+  "companyName" : "Microsoft",
+  "role" : "Software Engineer",
+  "status" : "REJECTED",
+  "appliedDate" : "2026-03-28",
+  "source" : "Naukri"
+}, {
+  "id" : 4,
+  "companyName" : "Flipkart",
+  "role" : "Java Developer",
+  "status" : "SAVED",
+  "appliedDate" : null,
+  "source" : "Career Page"
+}, {
+  "id" : 5,
+  "companyName" : "Adobe",
+  "role" : "Backend Engineer",
+  "status" : "OFFERED",
+  "appliedDate" : "2026-03-25",
+  "source" : "LinkedIn"
+}, {
+  "id" : 6,
+  "companyName" : "Infosys",
+  "role" : "System Engineer",
+  "status" : "APPLIED",
+  "appliedDate" : "2026-04-03",
+  "source" : "Campus"
+}, {
+  "id" : 7,
+  "companyName" : "TCS",
+  "role" : "Assistant System Engineer",
+  "status" : "REJECTED",
+  "appliedDate" : "2026-03-20",
+  "source" : "Naukri"
+}, {
+  "id" : 8,
+  "companyName" : "Wipro",
+  "role" : "Project Engineer",
+  "status" : "INTERVIEW",
+  "appliedDate" : "2026-04-04",
+  "source" : "Referral"
+}, {
+  "id" : 9,
+  "companyName" : "StartupX",
+  "role" : "Full Stack Dev",
+  "status" : "APPLIED",
+  "appliedDate" : null,
+  "source" : null
+}, {
+  "id" : 10,
+  "companyName" : "UnknownCorp",
+  "role" : "Intern",
+  "status" : "SAVED",
+  "appliedDate" : null,
+  "source" : "LinkedIn"
+} ]
