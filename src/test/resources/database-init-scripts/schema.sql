@@ -11,3 +11,11 @@ CREATE TABLE job_tracker.jobs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE job_tracker.reminders(
+    id BIGSERIAL PRIMARY KEY,
+    job_id BIGSERIAL,
+    reminder_Time TIMESTAMP,
+    type VARCHAR(255),
+    status VARCHAR(255),
+    email  VARCHAR(255)
+    );
