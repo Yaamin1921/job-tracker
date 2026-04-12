@@ -1,18 +1,4 @@
-DROP SCHEMA IF EXISTS job_tracker CASCADE;
-CREATE SCHEMA job_tracker;
-
-CREATE TABLE job_tracker.jobs (
-    id BIGSERIAL PRIMARY KEY,
-    company_name VARCHAR(255),
-    role VARCHAR(255),
-    status VARCHAR(50) NOT NULL,
-    applied_date DATE,
-    source VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO  job_tracker.jobs
+INSERT INTO job_tracker.jobs
 (company_name, role, status, applied_date, source, created_at, updated_at)
 VALUES
 ('Google', 'Backend Developer', 'APPLIED', '2026-04-01', 'LinkedIn', NOW(), NOW()),

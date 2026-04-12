@@ -39,7 +39,6 @@ public class ReminderServiceImpl implements ReminderService {
 
     public List<Reminder> getDueReminders(){
         List<Reminder> reminders= reminderRepository.findByReminderTimeBeforeAndStatus(OffsetDateTime.now(),ReminderStatus.PENDING);
-      //  return reminders.stream().map(reminder->mapper.map(reminder,ReminderDto.class)).toList();
         return reminders;
     }
 
