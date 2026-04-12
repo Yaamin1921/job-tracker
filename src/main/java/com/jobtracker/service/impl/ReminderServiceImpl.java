@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +40,11 @@ public class ReminderServiceImpl implements ReminderService {
 
     public List<Reminder> getDueReminders(){
         List<Reminder> reminders= reminderRepository.findByReminderTimeBeforeAndStatus(OffsetDateTime.now(),ReminderStatus.PENDING);
+        return reminders;
+    }
+    @Override
+    public Optional<Reminder> getDueReminderByJobId(Long jobId){
+        Optional<Reminder> reminders= reminderRepository.findByJobId(jobId);
         return reminders;
     }
 
