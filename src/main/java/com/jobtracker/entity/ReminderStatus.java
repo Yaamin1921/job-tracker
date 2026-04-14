@@ -2,5 +2,6 @@ package com.jobtracker.entity;
 
 public enum ReminderStatus {
     PENDING,
-    SENT
+    SENT,
+    FAILED
 }

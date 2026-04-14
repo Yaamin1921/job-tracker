@@ -37,4 +37,10 @@ public class Reminder {
 
     @Column(name="email")
     private String email;
+
+    @Column(name="error_message")
+    private String errorMessage;
+
+    @Column(name="retry_count")
+    private int retryCount;
 }
