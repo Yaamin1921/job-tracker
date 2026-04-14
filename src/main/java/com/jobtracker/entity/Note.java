@@ -1,11 +1,17 @@
 package com.jobtracker.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notes",schema = "job_tracker")
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Note {
 
     @Id
