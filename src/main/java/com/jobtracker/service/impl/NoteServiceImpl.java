@@ -1,10 +1,12 @@
 package com.jobtracker.service.impl;
 
+import com.jobtracker.dto.NotesDto;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.Note;
 import com.jobtracker.repository.JobRepository;
 import com.jobtracker.repository.NoteRepository;
 import com.jobtracker.service.NoteService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,8 @@ public class NoteServiceImpl implements NoteService
 
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private ModelMapper mapper;
 
     @Override
     public Note addNote(Long jobId, String content, String type) {
@@ -33,8 +37,10 @@ public class NoteServiceImpl implements NoteService
         return noteRepository.save(note);
     }
 
-    public List<Note> getNotes(Long jobId) {
-        return noteRepository.findByJobId(jobId);
+    public List<NotesDto> getNotes(Long jobId) {
+        var notesList= noteRepository.findByJobId(jobId);
+        var notes=notesList.stream().map(note->mapper.map(note, NotesDto.class)).toList();
+        return  notes;
     }
 
 }
