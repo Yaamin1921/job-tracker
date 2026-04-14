@@ -9,6 +9,7 @@ import com.jobtracker.service.EmailService;
 import com.jobtracker.service.NotificationService;
 import com.jobtracker.service.ReminderService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ReminderServiceImpl implements ReminderService {
     private final ReminderRepository reminderRepository;
     private final ModelMapper mapper;
@@ -52,10 +54,14 @@ public class ReminderServiceImpl implements ReminderService {
         List<Reminder> reminderList=getDueReminders();
 
         for(Reminder reminder : reminderList){
-            sendEmail(reminder);
+            try {
+                sendEmail(reminder);
 
-            notificationService.sendReminder(reminder);
-            reminder.setStatus(ReminderStatus.SENT);
+                notificationService.sendReminder(reminder);
+                reminder.setStatus(ReminderStatus.SENT);
+            }catch(Exception e){
+                handleFailure(reminder,e);
+            }
             reminderRepository.save(reminder);
         }
     }
@@ -71,6 +77,18 @@ public class ReminderServiceImpl implements ReminderService {
             emailService.sendReminderEmail(reminder.getEmail(), subject, body);
         }
 
+    }
+
+    private void handleFailure(Reminder reminder,Exception e){
+        int retryCount=reminder.getRetryCount()+1;
+        reminder.setRetryCount(retryCount);
+        if(retryCount>3){
+            reminder.setStatus(ReminderStatus.FAILED);
+        }else{
+            reminder.setStatus(ReminderStatus.PENDING);
+            reminder.setReminderTime(reminder.getReminderTime().plusMinutes(5));
+        }
+        log.info("Failed to process reminder id {} ",reminder.getId(),e);
     }
 
 }

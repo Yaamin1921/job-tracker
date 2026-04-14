@@ -17,5 +17,7 @@ CREATE TABLE job_tracker.reminders(
     reminder_Time TIMESTAMP,
     type VARCHAR(255),
     status VARCHAR(255),
-    email  VARCHAR(255)
+    email  VARCHAR(255),
+    error_message varchar(555),
+    retry_count  INTEGER
     );
