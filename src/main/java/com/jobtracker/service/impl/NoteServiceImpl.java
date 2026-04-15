@@ -3,6 +3,7 @@ package com.jobtracker.service.impl;
 import com.jobtracker.dto.NotesDto;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.Note;
+import com.jobtracker.exception.JobNotFoundException;
 import com.jobtracker.repository.JobRepository;
 import com.jobtracker.repository.NoteRepository;
 import com.jobtracker.service.NoteService;
@@ -26,7 +27,7 @@ public class NoteServiceImpl implements NoteService
     public Note addNote(Long jobId, String content, String type) {
 
         Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new RuntimeException("Job not found"));
+                .orElseThrow(() -> new JobNotFoundException(jobId));
 
         Note note = new Note();
         note.setContent(content);
