@@ -4,6 +4,7 @@ import com.jobtracker.dto.NoteRequest;
 import com.jobtracker.dto.NotesDto;
 import com.jobtracker.entity.Note;
 import com.jobtracker.service.NoteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/notes")
+@RequiredArgsConstructor
 public class NoteController {
 
     @Autowired
-    private NoteService noteService;
+    private final NoteService noteService;
 
     @PostMapping("/{jobId}")
     public ResponseEntity<Note> addNote(

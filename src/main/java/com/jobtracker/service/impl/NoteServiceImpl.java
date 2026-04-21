@@ -7,12 +7,16 @@ import com.jobtracker.exception.JobNotFoundException;
 import com.jobtracker.repository.JobRepository;
 import com.jobtracker.repository.NoteRepository;
 import com.jobtracker.service.NoteService;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService
 {
     @Autowired
