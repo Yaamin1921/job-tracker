@@ -6,12 +6,12 @@ import com.jobtracker.entity.Reminder;
 import com.jobtracker.entity.ReminderType;
 import com.jobtracker.service.ReminderService;
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,6 +34,8 @@ public class ReminderControllerTest {
     private static final String API_V1_CREATE_REMINDERS="/api/reminders";
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @Autowired
     private ObjectMapper objectMapper;

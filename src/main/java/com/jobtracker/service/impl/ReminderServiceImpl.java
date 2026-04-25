@@ -9,6 +9,7 @@ import com.jobtracker.service.EmailService;
 import com.jobtracker.service.NotificationService;
 import com.jobtracker.service.ReminderService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class ReminderServiceImpl implements ReminderService {
     private final ReminderRepository reminderRepository;
