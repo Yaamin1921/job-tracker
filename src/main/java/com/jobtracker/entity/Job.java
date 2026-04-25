@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "jobs",schema ="job_tracker")
+@Table(name = "jobs")
 @Getter
 @Setter
 @NoArgsConstructor
