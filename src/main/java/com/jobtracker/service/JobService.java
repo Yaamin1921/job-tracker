@@ -8,7 +8,7 @@ import com.jobtracker.entity.JobStatus;
 import java.util.List;
 
 public interface JobService {
-    JobDto createJob(JobDto jobDto);
+    List<JobDto> createJob(List<JobDto> jobDto);
 
     List<JobDto> getAllJobs();
 

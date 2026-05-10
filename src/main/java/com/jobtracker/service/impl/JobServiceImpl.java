@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
@@ -54,20 +55,26 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public JobDto createJob(JobDto jobDto) {
-        Job job = mapToEntity(jobDto);
-        Job savedJob = jobRepository.save(job);
+    public List<JobDto> createJob(List<JobDto> jobDto) {
 
-        Activity activity = Activity.builder()
-                .jobId(savedJob.getId())
-                .action(ActivityType.CREATED)
-                .notes("Job created for company: " + job.getCompanyName())
-                .timestamp(LocalDateTime.now())
-                .build();
+        List<Job> savedJobs=new ArrayList<>();
 
-        activityRepository.save(activity);
+        for(JobDto jobDto1:jobDto) {
+            Job job = mapToEntity(jobDto1);
+            Job savedJob = jobRepository.save(job);
+            savedJobs.add(savedJob);
 
-        return mapToDto(savedJob);
+            Activity activity = Activity.builder()
+                    .jobId(savedJob.getId())
+                    .action(ActivityType.CREATED)
+                    .notes("Job created for company: " + job.getCompanyName())
+                    .timestamp(LocalDateTime.now())
+                    .build();
+
+            activityRepository.save(activity);
+        }
+
+        return savedJobs.stream().map(this::mapToDto).toList();
     }
 
     @Override
