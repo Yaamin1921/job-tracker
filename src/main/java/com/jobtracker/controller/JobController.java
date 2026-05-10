@@ -43,7 +43,7 @@ public class JobController {
             )
     })
     @PostMapping
-    public ResponseEntity<JobDto> createJob(@RequestBody JobDto jobDto) {
+    public ResponseEntity<List<JobDto>> createJob(@RequestBody List<JobDto> jobDto) {
         return new ResponseEntity<>(jobService.createJob(jobDto), HttpStatus.CREATED);
     }
 
