@@ -1,5 +1,7 @@
 package com.jobtracker.service;
 
-public interface DashboardService {
+import com.jobtracker.dto.DashboardResponse;
 
+public interface DashboardService {
+ DashboardResponse getDashboardStats();
 }

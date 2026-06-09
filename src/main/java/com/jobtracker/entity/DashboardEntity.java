@@ -1,8 +1,12 @@
 package com.jobtracker.entity;
 
 
-import java.math.BigDecimal;
+import jakarta.persistence.Table;
+import lombok.Builder;
 
+import java.math.BigDecimal;
+@Table(name="dashboard")
+@Builder
 public class DashboardEntity {
     private BigDecimal jobsCount;
     private BigDecimal appliedCount;
