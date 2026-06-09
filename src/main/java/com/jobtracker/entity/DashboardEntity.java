@@ -7,6 +7,8 @@ import lombok.Builder;
 import java.math.BigDecimal;
 @Table(name="dashboard")
 @Builder
+import java.math.BigDecimal;
+
 public class DashboardEntity {
     private BigDecimal jobsCount;
     private BigDecimal appliedCount;

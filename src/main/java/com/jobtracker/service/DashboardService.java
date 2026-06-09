@@ -4,4 +4,5 @@ import com.jobtracker.dto.DashboardResponse;
 
 public interface DashboardService {
  DashboardResponse getDashboardStats();
+
 }
