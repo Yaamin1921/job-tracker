@@ -11,6 +11,7 @@ import com.jobtracker.repository.JobRepository;
 import com.jobtracker.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final ActivityRepository activityRepository;
 
-    // ✅ Allowed transitions map
+    // Allowed transitions map
     private static final EnumMap<JobStatus, Set<JobStatus>> allowedTransitions = new EnumMap<>(JobStatus.class);
 
     static {
@@ -78,6 +79,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @Cacheable(value = "jobs")
     public List<JobDto> getAllJobs() {
         return jobRepository.findAll()
                 .stream()
