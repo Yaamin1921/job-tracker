@@ -6,6 +6,7 @@ import com.jobtracker.repository.JobRepository;
 import com.jobtracker.service.DashboardService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.List;
 public class DashboardServiceImpl implements DashboardService {
     private final JobRepository repository;
 
+    @Override
+    @Cacheable(value = "dashboard")
     public DashboardResponse getDashboardStats() {
 
         long totalJobs = repository.count();
