@@ -6,6 +6,8 @@ import com.jobtracker.entity.Activity;
 import com.jobtracker.entity.ActivityType;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.JobStatus;
+import com.jobtracker.event.JobCreatedEvent;
+import com.jobtracker.publisher.JobEventPublisher;
 import com.jobtracker.repository.ActivityRepository;
 import com.jobtracker.repository.JobRepository;
 import com.jobtracker.service.JobService;
@@ -26,6 +28,7 @@ public class JobServiceImpl implements JobService {
     private final ModelMapper mapper;
     private final JobRepository jobRepository;
     private final ActivityRepository activityRepository;
+    private final JobEventPublisher publisher;
 
     // ✅ Allowed transitions map
     private static final EnumMap<JobStatus, Set<JobStatus>> allowedTransitions = new EnumMap<>(JobStatus.class);
@@ -64,14 +67,23 @@ public class JobServiceImpl implements JobService {
             Job savedJob = jobRepository.save(job);
             savedJobs.add(savedJob);
 
-            Activity activity = Activity.builder()
+            /*Activity activity = Activity.builder()
                     .jobId(savedJob.getId())
                     .action(ActivityType.CREATED)
                     .notes("Job created for company: " + job.getCompanyName())
                     .timestamp(LocalDateTime.now())
                     .build();
 
-            activityRepository.save(activity);
+            activityRepository.save(activity);*/
+
+            publisher.publish(
+                    JobCreatedEvent.builder()
+                            .jobId(savedJob.getId())
+                            .companyName(savedJob.getCompanyName())
+                            .role(savedJob.getRole())
+                            .createdAt(LocalDateTime.now())
+                            .build()
+            );
         }
 
         return savedJobs.stream().map(this::mapToDto).toList();
