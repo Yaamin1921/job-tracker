@@ -7,6 +7,7 @@ import com.jobtracker.entity.ActivityType;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.JobStatus;
 import com.jobtracker.event.JobCreatedEvent;
+import com.jobtracker.event.JobStatusUpdateEvent;
 import com.jobtracker.publisher.JobEventPublisher;
 import com.jobtracker.repository.ActivityRepository;
 import com.jobtracker.repository.JobRepository;
@@ -111,7 +112,7 @@ public class JobServiceImpl implements JobService {
 
         JobStatus currentStatus = job.getStatus();
 
-        // 🔥 VALIDATION
+        //  VALIDATION
         if (!isValidTransition(currentStatus, newStatus)) {
             throw new IllegalStateException(
                     "Invalid status transition from " + currentStatus + " to " + newStatus
@@ -120,15 +121,14 @@ public class JobServiceImpl implements JobService {
         job.setStatus(newStatus);
         var jobs= jobRepository.save(job);
 
-        // 🔥 CREATE ACTIVITY
-        Activity activity = Activity.builder()
-                .jobId(jobId)
-                .action(ActivityType.STATUS_CHANGED)
-                .notes("Status changed from " + currentStatus + " to " + newStatus)
-                .timestamp(LocalDateTime.now())
-                .build();
+        //  CREATE ACTIVITY
+        /**/
 
-        activityRepository.save(activity);
+        //activityRepository.save(activity);
+        var jobStatusEvent= JobStatusUpdateEvent.builder().jobId(job.getId())
+                .currentStatus(currentStatus.getStatus()).newStatus(newStatus.getStatus()).build();
+        publisher.publishJobStatusUpdate(jobStatusEvent);
+
 
         return mapToDto(jobs);
     }
