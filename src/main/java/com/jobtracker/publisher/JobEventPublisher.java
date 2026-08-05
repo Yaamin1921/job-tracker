@@ -2,6 +2,7 @@ package com.jobtracker.publisher;
 
 import com.jobtracker.config.RabbitMQConfig;
 import com.jobtracker.event.JobCreatedEvent;
+import com.jobtracker.event.JobDeleteEvent;
 import com.jobtracker.event.JobStatusUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -25,5 +26,12 @@ public class JobEventPublisher {
                 RabbitMQConfig.STATUS_EXCHANGE,
                 RabbitMQConfig.ROUTING_KEY,
                 jobStatusUpdateEvent);
+    }
+
+    public void publishJobDeletedEvent(JobDeleteEvent jobDeleteEvent) {
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.JOB_DELETED_EXCHANGE,
+                RabbitMQConfig.ROUTING_KEY,
+                jobDeleteEvent);
     }
 }

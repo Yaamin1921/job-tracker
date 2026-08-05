@@ -19,6 +19,9 @@ public class RabbitMQConfig {
     public static final String STATUS_EXCHANGE = "job.status_exchange";
     public static final String STATUS_QUEUE = "job.created.status_queue";
     public static final String STATUS_ROUTING_KEY = "job.status_created";
+    public static final String JOB_DELETED_EXCHANGE = "job.deleted_exchange";
+    public static final String JOB_DELETED_QUEUE = "job.deleted_queue";
+    public static final String JOB_DELETED_ROUTING_KEY = "job.deleted_created";
 
     @Bean
     public Queue queue() {
@@ -35,6 +38,23 @@ public class RabbitMQConfig {
                 .to(exchange())
                 .with(ROUTING_KEY);
     }
+
+    @Bean
+    public Queue job_Deleted_Queue() {
+        return new Queue(JOB_DELETED_QUEUE);
+    }
+    @Bean
+    public DirectExchange job_Deleted_Exchange() {
+        return new DirectExchange(JOB_DELETED_EXCHANGE);
+    }
+    @Bean
+    public Binding job_Deleted_Binding() {
+        return BindingBuilder
+                .bind(queue())
+                .to(exchange())
+                .with(JOB_DELETED_ROUTING_KEY);
+    }
+
     @Bean
     public Queue status_Queue() {
         return new Queue(STATUS_QUEUE);

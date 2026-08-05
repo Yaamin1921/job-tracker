@@ -7,6 +7,7 @@ import com.jobtracker.entity.ActivityType;
 import com.jobtracker.entity.Job;
 import com.jobtracker.entity.JobStatus;
 import com.jobtracker.event.JobCreatedEvent;
+import com.jobtracker.event.JobDeleteEvent;
 import com.jobtracker.event.JobStatusUpdateEvent;
 import com.jobtracker.publisher.JobEventPublisher;
 import com.jobtracker.repository.ActivityRepository;
@@ -138,10 +139,13 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void deleteJob(Long id) {
-        if (!jobRepository.existsById(id)) {
+        /*if (!jobRepository.existsById(id)) {
             throw new RuntimeException("Job not found with id: " + id);
-        }
+        }*/
+        var job=jobRepository.findById(id).orElseThrow(()-> new RuntimeException("Job not found with id: " + id));
         jobRepository.deleteById(id);
+        JobDeleteEvent jobDeleteEvent=JobDeleteEvent.builder().jobId(job.getId()).companyName(job.getCompanyName()).role(job.getRole()).createdAt(LocalDateTime.now()).build();
+        publisher.publishJobDeletedEvent(jobDeleteEvent);
     }
 
     @Override
