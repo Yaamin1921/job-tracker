@@ -1,32 +1,80 @@
 package com.jobtracker.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 
-
-
 public class RabbitMQConfig {
-    public static final String EXCHANGE = "job.exchange";
-    public static final String QUEUE = "job.created.queue";
-    public static final String ROUTING_KEY = "job.created";
-    public static final String STATUS_EXCHANGE = "job.status_exchange";
-    public static final String STATUS_QUEUE = "job.created.status_queue";
-    public static final String STATUS_ROUTING_KEY = "job.status_created";
-    public static final String JOB_DELETED_EXCHANGE = "job.deleted_exchange";
-    public static final String JOB_DELETED_QUEUE = "job.deleted_queue";
-    public static final String JOB_DELETED_ROUTING_KEY = "job.deleted_created";
-    public static final String NOTES_ADDED_EXCHANGE = "notes_added_exchange";
-    public static final String NOTES_ADDED_QUEUE = "notes_added_queue";
-    public static final String NOTES_ADDED_ROUTING_KEY = "notes_added_created";
+
+    private RabbitMQConfig() {}
+
+    // Exchange
+    public static final String EXCHANGE = "jobtracker.exchange";
+
+    // Queues
+    public static final String JOB_QUEUE = "job.queue";
+    public static final String STATUS_QUEUE = "status.queue";
+    public static final String NOTES_QUEUE = "notes.queue";
+
+    // Routing Keys
+    public static final String JOB_CREATED = "job.created";
+    public static final String JOB_UPDATED = "job.updated";
+    public static final String JOB_DELETED = "job.deleted";
+
+    public static final String STATUS_CREATED = "status.created";
+    public static final String STATUS_UPDATED = "status.updated";
+
+    public static final String NOTES_CREATED = "notes.created";
+    public static final String NOTES_UPDATED = "notes.updated";
+    public static final String NOTES_DELETED = "notes.deleted";
 
     @Bean
+    public Declarables rabbitMQDeclarables() {
+
+        Queue jobQueue = new Queue(JOB_QUEUE);
+        Queue statusQueue = new Queue(STATUS_QUEUE);
+        Queue notesQueue = new Queue(NOTES_QUEUE);
+
+        TopicExchange exchange = new TopicExchange(EXCHANGE);
+
+        return new Declarables(
+                exchange,
+                jobQueue,
+                statusQueue,
+                notesQueue,
+
+                BindingBuilder.bind(jobQueue)
+                        .to(exchange)
+                        .with("job.*"),
+
+                BindingBuilder.bind(statusQueue)
+                        .to(exchange)
+                        .with("status.*"),
+
+                BindingBuilder.bind(notesQueue)
+                        .to(exchange)
+                        .with("notes.*")
+        );
+    }
+
+    @Bean
+    public MessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
+                                         MessageConverter messageConverter) {
+
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(messageConverter);
+        return rabbitTemplate;
+    }
+
+   /* @Bean
     public Queue queue() {
         return new Queue(QUEUE);
     }
@@ -40,70 +88,6 @@ public class RabbitMQConfig {
                 .bind(queue())
                 .to(exchange())
                 .with(ROUTING_KEY);
-    }
-    @Bean
-    public Queue notes_queue() {
-        return new Queue(NOTES_ADDED_QUEUE);
-    }
-    @Bean
-    public DirectExchange notes_exchange() {
-        return new DirectExchange(NOTES_ADDED_EXCHANGE);
-    }
-    @Bean
-    public Binding notes_Binding() {
-        return BindingBuilder
-                .bind(notes_queue())
-                .to(notes_exchange())
-                .with(NOTES_ADDED_ROUTING_KEY);
-    }
-
-    @Bean
-    public Queue job_Deleted_Queue() {
-        return new Queue(JOB_DELETED_QUEUE);
-    }
-    @Bean
-    public DirectExchange job_Deleted_Exchange() {
-        return new DirectExchange(JOB_DELETED_EXCHANGE);
-    }
-    @Bean
-    public Binding job_Deleted_Binding() {
-        return BindingBuilder
-                .bind(queue())
-                .to(exchange())
-                .with(JOB_DELETED_ROUTING_KEY);
-    }
-
-    @Bean
-    public Queue status_Queue() {
-        return new Queue(STATUS_QUEUE);
-    }
-
-    @Bean
-    public DirectExchange status_Exchange() {
-        return new DirectExchange(STATUS_EXCHANGE);
-    }
-    @Bean
-    public Binding status_Binding() {
-        return BindingBuilder
-                .bind(queue())
-                .to(status_Exchange())
-                .with(STATUS_ROUTING_KEY);
-    }
-
-    @Bean
-    public MessageConverter converter() {
-        return new Jackson2JsonMessageConverter();
-    }
-    @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-
-        rabbitTemplate.setMessageConverter(converter());
-
-        return rabbitTemplate;
-    }
-
-
+    }*/
 }
 

@@ -17,21 +17,21 @@ public class JobEventPublisher {
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE,
-                RabbitMQConfig.ROUTING_KEY,
+                RabbitMQConfig.JOB_CREATED,
                 event
         );
     }
     public void publishJobStatusUpdate(JobStatusUpdateEvent jobStatusUpdateEvent){
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.STATUS_EXCHANGE,
-                RabbitMQConfig.ROUTING_KEY,
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.STATUS_UPDATED,
                 jobStatusUpdateEvent);
     }
 
     public void publishJobDeletedEvent(JobDeleteEvent jobDeleteEvent) {
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.JOB_DELETED_EXCHANGE,
-                RabbitMQConfig.ROUTING_KEY,
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.JOB_DELETED,
                 jobDeleteEvent);
     }
 }
