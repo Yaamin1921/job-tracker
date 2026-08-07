@@ -1,8 +1,10 @@
 package com.jobtracker.consumer;
 
+import com.jobtracker.config.RabbitMQConfig;
 import com.jobtracker.entity.Activity;
 import com.jobtracker.entity.ActivityType;
 import com.jobtracker.event.JobCreatedEvent;
+import com.jobtracker.event.JobDeleteEvent;
 import com.jobtracker.event.JobStatusUpdateEvent;
 import com.jobtracker.repository.ActivityRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +18,7 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@RabbitListener(queues = "job.queue")
+@RabbitListener(queues = RabbitMQConfig.JOB_QUEUE)
 public class ActivityConsumer {
     private final ActivityRepository activityRepository;
 
@@ -34,7 +36,8 @@ public class ActivityConsumer {
         log.info("Activity created");
 
     }
-    @RabbitHandler public void jobStatusConsume(JobStatusUpdateEvent event) {
+    @RabbitHandler
+    public void handle(JobStatusUpdateEvent event) {
         Activity activity = Activity.builder()
                 .jobId(event.getJobId())
                 .action(ActivityType.STATUS_CHANGED)
@@ -46,28 +49,19 @@ public class ActivityConsumer {
         log.info("job status changed successfully");
 
     }
+    @RabbitHandler
+    public void handle(JobDeleteEvent jobDeleteEvent) {
+        Activity activity = Activity.builder()
+                .jobId(jobDeleteEvent.getJobId())
+                .action(ActivityType.DELETED)
+                .notes("Job with id: "+jobDeleteEvent.getJobId() + " deleted.")
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        activityRepository.save(activity);
+        log.info("job id: {}  successfully deleted. ",jobDeleteEvent.getJobId());
+
+    }
 
 }
 
-/*POST /jobs
-      │
-      ▼
-JobController
-      │
-      ▼
-JobService
-      │
-      ▼
-Save Job
-      │
-      ▼
-Publish JobCreatedEvent
-      │
-      ▼
-RabbitMQ
-      │
-      ▼
-ActivityConsumer
-      │
-      ▼
-Save Activity*/
