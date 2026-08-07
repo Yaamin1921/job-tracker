@@ -13,8 +13,8 @@ public class NotesEventPublisher {
 
     public void publishNoteCreate(NotesEvent event) {
         rabbitTemplate.convertAndSend(
-                RabbitMQConfig.NOTES_ADDED_EXCHANGE,
-                RabbitMQConfig.NOTES_ADDED_ROUTING_KEY,
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.NOTES_CREATED,
                 event
         );
     }
