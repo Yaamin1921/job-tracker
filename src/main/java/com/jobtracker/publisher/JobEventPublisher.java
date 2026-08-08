@@ -24,7 +24,7 @@ public class JobEventPublisher {
     public void publishJobStatusUpdate(JobStatusUpdateEvent jobStatusUpdateEvent){
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE,
-                RabbitMQConfig.STATUS_UPDATED,
+                RabbitMQConfig.JOB_UPDATED,
                 jobStatusUpdateEvent);
     }
 
