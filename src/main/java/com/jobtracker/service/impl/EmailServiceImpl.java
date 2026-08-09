@@ -14,7 +14,7 @@ public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
 
     @Override
-    public void sendReminderEmail(String to, String subject, String body) {
+    public void sendEmail(String to, String subject, String body) {
         log.info("INFO Sending email to {}",to);
 
         SimpleMailMessage message = new SimpleMailMessage();

@@ -19,26 +19,22 @@ public class RabbitMQConfig {
     public static final String JOB_QUEUE = "job.queue";
     public static final String STATUS_QUEUE = "status.queue";
     public static final String NOTES_QUEUE = "notes.queue";
+    public static final String Email_QUEUE = "job.queue";
 
     // Routing Keys
     public static final String JOB_CREATED = "job.created";
     public static final String JOB_UPDATED = "job.updated";
     public static final String JOB_DELETED = "job.deleted";
-
-    public static final String STATUS_CREATED = "status.created";
-    public static final String STATUS_UPDATED = "status.updated";
-
     public static final String NOTES_CREATED = "notes.created";
-    public static final String NOTES_UPDATED = "notes.updated";
-    public static final String NOTES_DELETED = "notes.deleted";
+
 
     @Bean
     public Declarables rabbitMQDeclarables() {
-        System.out.println("--->declaring job queu start up");
 
         Queue jobQueue = new Queue(JOB_QUEUE);
         Queue statusQueue = new Queue(STATUS_QUEUE);
         Queue notesQueue = new Queue(NOTES_QUEUE);
+        Queue emailQueue=new Queue(Email_QUEUE);
 
         TopicExchange exchange = new TopicExchange(EXCHANGE);
 
@@ -47,6 +43,7 @@ public class RabbitMQConfig {
                 jobQueue,
                 statusQueue,
                 notesQueue,
+                emailQueue,
 
                 BindingBuilder.bind(jobQueue)
                         .to(exchange)
@@ -58,7 +55,11 @@ public class RabbitMQConfig {
 
                 BindingBuilder.bind(notesQueue)
                         .to(exchange)
-                        .with("notes.*")
+                        .with("notes.*"),
+
+                BindingBuilder.bind(emailQueue)
+                        .to(exchange)
+                        .with("job.*")
         );
     }
 
@@ -75,21 +76,5 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
     }
-
-   /* @Bean
-    public Queue queue() {
-        return new Queue(QUEUE);
-    }
-    @Bean
-    public DirectExchange exchange() {
-        return new DirectExchange(EXCHANGE);
-    }
-    @Bean
-    public Binding binding() {
-        return BindingBuilder
-                .bind(queue())
-                .to(exchange())
-                .with(ROUTING_KEY);
-    }*/
 }
 
