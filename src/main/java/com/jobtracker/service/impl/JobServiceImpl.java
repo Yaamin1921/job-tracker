@@ -32,18 +32,26 @@ public class JobServiceImpl implements JobService {
     private final ActivityRepository activityRepository;
     private final JobEventPublisher publisher;
 
-    // ✅ Allowed transitions map
     private static final EnumMap<JobStatus, Set<JobStatus>> allowedTransitions = new EnumMap<>(JobStatus.class);
 
     static {
-        allowedTransitions.put(JobStatus.SAVED, Set.of(JobStatus.APPLIED));
+        allowedTransitions.put(JobStatus.SAVED, Set.of(
+                JobStatus.APPLIED,
+                JobStatus.HR_REPLIED,
+                JobStatus.INTERVIEW,
+                JobStatus.OFFERED,
+                JobStatus.REJECTED,
+                JobStatus.NO_RESPONSE));
 
         allowedTransitions.put(JobStatus.APPLIED, Set.of(
                 JobStatus.HR_REPLIED,
+                JobStatus.INTERVIEW,
+                JobStatus.OFFERED,
                 JobStatus.REJECTED,
                 JobStatus.NO_RESPONSE));
         allowedTransitions.put(JobStatus.HR_REPLIED, Set.of(
                 JobStatus.INTERVIEW,
+                JobStatus.OFFERED,
                 JobStatus.REJECTED
         ));
         allowedTransitions.put(JobStatus.INTERVIEW, Set.of(

@@ -19,7 +19,7 @@ public class RabbitMQConfig {
     public static final String JOB_QUEUE = "job.queue";
     public static final String STATUS_QUEUE = "status.queue";
     public static final String NOTES_QUEUE = "notes.queue";
-    public static final String Email_QUEUE = "job.queue";
+    public static final String Email_QUEUE = "job.email.queue";
 
     // Routing Keys
     public static final String JOB_CREATED = "job.created";
