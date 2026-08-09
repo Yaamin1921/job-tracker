@@ -1,6 +1,6 @@
 package com.jobtracker.service;
 
 public interface EmailService {
-    void sendReminderEmail(String to, String subject, String body);
+    void sendEmail(String to, String subject, String body);
 
 }

@@ -8,7 +8,6 @@ import com.jobtracker.repository.ReminderRepository;
 import com.jobtracker.service.EmailService;
 import com.jobtracker.service.NotificationService;
 import com.jobtracker.service.ReminderService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -75,7 +74,7 @@ public class ReminderServiceImpl implements ReminderService {
                     + "Job ID: " + reminder.getJobId() + "\n"
                     + "Type: " + reminder.getType() + "\n\n"
                     + "Best of luck! ";
-            emailService.sendReminderEmail(reminder.getEmail(), subject, body);
+            emailService.sendEmail(reminder.getEmail(), subject, body);
         }
 
     }
