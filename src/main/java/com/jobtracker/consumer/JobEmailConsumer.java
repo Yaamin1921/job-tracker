@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@RabbitListener(queues = RabbitMQConfig.Email_QUEUE)
+@RabbitListener(queues = RabbitMQConfig.Email_QUEUE,containerFactory = "rabbitListenerContainerFactory")
 public class JobEmailConsumer {
     @Autowired
     private EmailService emailService;
