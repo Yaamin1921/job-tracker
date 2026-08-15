@@ -30,40 +30,125 @@ public class RabbitMQConfig {
     public static final String JOB_DELETED = "job.deleted";
     public static final String NOTES_CREATED = "notes.created";
 
-
     @Bean
     public Declarables rabbitMQDeclarables() {
 
-        Queue jobQueue = new Queue(JOB_QUEUE);
-        Queue statusQueue = new Queue(STATUS_QUEUE);
-        Queue notesQueue = new Queue(NOTES_QUEUE);
-        Queue emailQueue=new Queue(Email_QUEUE);
+        TopicExchange exchange =
+                new TopicExchange(EXCHANGE);
 
-        TopicExchange exchange = new TopicExchange(EXCHANGE);
+        TopicExchange dlx =
+                new TopicExchange("dead-letter.exchange");
+
+
+        Queue jobQueue =
+                createQueue(JOB_QUEUE, "job.dlq");
+
+        Queue statusQueue =
+                createQueue(STATUS_QUEUE, "status.dlq");
+
+        Queue notesQueue =
+                createQueue(NOTES_QUEUE, "notes.dlq");
+
+        Queue emailQueue =
+                createQueue(Email_QUEUE, "email.dlq");
+
+
+        Binding jobBinding =
+                BindingBuilder.bind(jobQueue)
+                        .to(exchange)
+                        .with("job.*");
+
+        Binding statusBinding =
+                BindingBuilder.bind(statusQueue)
+                        .to(exchange)
+                        .with("status.*");
+
+        Binding notesBinding =
+                BindingBuilder.bind(notesQueue)
+                        .to(exchange)
+                        .with("notes.*");
+
+        Binding emailBinding =
+                BindingBuilder.bind(emailQueue)
+                        .to(exchange)
+                        .with("email.*");
+
+
+        // DLQs
+        Queue jobDlq =
+                new Queue("job.dlq");
+
+        Queue statusDlq =
+                new Queue("status.dlq");
+
+        Queue notesDlq =
+                new Queue("notes.dlq");
+
+        Queue emailDlq =
+                new Queue("email.dlq");
+
+
+        // DLQ bindings
+        Binding jobDlqBinding =
+                BindingBuilder.bind(jobDlq)
+                        .to(dlx)
+                        .with("job.dlq");
+
+        Binding statusDlqBinding =
+                BindingBuilder.bind(statusDlq)
+                        .to(dlx)
+                        .with("status.dlq");
+
+        Binding notesDlqBinding =
+                BindingBuilder.bind(notesDlq)
+                        .to(dlx)
+                        .with("notes.dlq");
+
+        Binding emailDlqBinding =
+                BindingBuilder.bind(emailDlq)
+                        .to(dlx)
+                        .with("email.dlq");
+
 
         return new Declarables(
                 exchange,
+                dlx,
+
                 jobQueue,
                 statusQueue,
                 notesQueue,
                 emailQueue,
 
-                BindingBuilder.bind(jobQueue)
-                        .to(exchange)
-                        .with("job.*"),
+                jobDlq,
+                statusDlq,
+                notesDlq,
+                emailDlq,
 
-                BindingBuilder.bind(statusQueue)
-                        .to(exchange)
-                        .with("status.*"),
+                jobBinding,
+                statusBinding,
+                notesBinding,
+                emailBinding,
 
-                BindingBuilder.bind(notesQueue)
-                        .to(exchange)
-                        .with("notes.*"),
-
-                BindingBuilder.bind(emailQueue)
-                        .to(exchange)
-                        .with("job.*")
+                jobDlqBinding,
+                statusDlqBinding,
+                notesDlqBinding,
+                emailDlqBinding
         );
+    }
+
+    private Queue createQueue(String queueName, String dlqRoutingKey) {
+
+        return QueueBuilder
+                .durable(queueName)
+                .withArgument(
+                        "x-dead-letter-exchange",
+                        "dead-letter.exchange"
+                )
+                .withArgument(
+                        "x-dead-letter-routing-key",
+                        dlqRoutingKey
+                )
+                .build();
     }
 
     @Bean
