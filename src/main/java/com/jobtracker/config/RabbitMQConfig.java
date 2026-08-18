@@ -166,12 +166,13 @@ public class RabbitMQConfig {
     }
     @Bean
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
-            ConnectionFactory connectionFactory) {
+            ConnectionFactory connectionFactory,MessageConverter messageConverter) {
 
         SimpleRabbitListenerContainerFactory factory =
                 new SimpleRabbitListenerContainerFactory();
 
         factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(messageConverter);
 
         factory.setDefaultRequeueRejected(false);
 

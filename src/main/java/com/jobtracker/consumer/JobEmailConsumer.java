@@ -21,6 +21,7 @@ public class JobEmailConsumer {
     @Autowired
     private EmailService emailService;
     private static final String EMAIL="yaamin1921413@gmail.com";
+    @Autowired
     private final ProcessedEventService processedEventService;
     @RabbitHandler
     public void handle(JobCreatedEvent event) {

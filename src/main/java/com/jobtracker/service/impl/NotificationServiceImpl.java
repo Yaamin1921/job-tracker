@@ -3,6 +3,7 @@ package com.jobtracker.service.impl;
 import com.jobtracker.entity.Reminder;
 import com.jobtracker.service.NotificationService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
