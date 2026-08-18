@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -19,9 +20,10 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@RabbitListener(queues = RabbitMQConfig.JOB_QUEUE)
+@RabbitListener(queues = RabbitMQConfig.JOB_QUEUE,containerFactory = "rabbitListenerContainerFactory")
 public class ActivityConsumer {
     private final ActivityRepository activityRepository;
+    @Autowired
     private final ProcessedEventService  processedEventService;
 
      @RabbitHandler
