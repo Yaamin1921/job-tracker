@@ -34,10 +34,10 @@ public class RabbitMQConfig {
     public Declarables rabbitMQDeclarables() {
 
         TopicExchange exchange =
-                new TopicExchange(EXCHANGE);
+                new TopicExchange(EXCHANGE,true,true);
 
         TopicExchange dlx =
-                new TopicExchange("dead-letter.exchange");
+                new TopicExchange("dead-letter.exchange",true,true);
 
 
         Queue jobQueue =
@@ -76,16 +76,16 @@ public class RabbitMQConfig {
 
         // DLQs
         Queue jobDlq =
-                new Queue("job.dlq");
+                new Queue("job.dlq",true);
 
         Queue statusDlq =
-                new Queue("status.dlq");
+                new Queue("status.dlq",true);
 
         Queue notesDlq =
-                new Queue("notes.dlq");
+                new Queue("notes.dlq",true);
 
         Queue emailDlq =
-                new Queue("email.dlq");
+                new Queue("email.dlq",true);
 
 
         // DLQ bindings
