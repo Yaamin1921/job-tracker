@@ -34,10 +34,10 @@ public class RabbitMQConfig {
     public Declarables rabbitMQDeclarables() {
 
         TopicExchange exchange =
-                new TopicExchange(EXCHANGE,true,true);
+                new TopicExchange(EXCHANGE,true,false);
 
         TopicExchange dlx =
-                new TopicExchange("dead-letter.exchange",true,true);
+                new TopicExchange("dead-letter.exchange",true,false);
 
 
         Queue jobQueue =
@@ -71,7 +71,7 @@ public class RabbitMQConfig {
         Binding emailBinding =
                 BindingBuilder.bind(emailQueue)
                         .to(exchange)
-                        .with("email.*");
+                        .with("job.*");
 
 
         // DLQs
