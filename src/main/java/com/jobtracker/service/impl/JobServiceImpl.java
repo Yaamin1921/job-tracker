@@ -18,10 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -92,6 +89,7 @@ public class JobServiceImpl implements JobService {
                             .companyName(savedJob.getCompanyName())
                             .role(savedJob.getRole())
                             .createdAt(LocalDateTime.now())
+                            .eventId(UUID.randomUUID())
                             .build()
             );
         }
@@ -135,7 +133,8 @@ public class JobServiceImpl implements JobService {
 
         //activityRepository.save(activity);
         var jobStatusEvent= JobStatusUpdateEvent.builder().jobId(job.getId())
-                .currentStatus(currentStatus.getStatus()).newStatus(newStatus.getStatus()).build();
+                .currentStatus(currentStatus.getStatus()).newStatus(newStatus.getStatus())
+                .eventId(UUID.randomUUID()).build();
         publisher.publishJobStatusUpdate(jobStatusEvent);
 
 
@@ -152,7 +151,7 @@ public class JobServiceImpl implements JobService {
         }*/
         var job=jobRepository.findById(id).orElseThrow(()-> new RuntimeException("Job not found with id: " + id));
         jobRepository.deleteById(id);
-        JobDeleteEvent jobDeleteEvent=JobDeleteEvent.builder().jobId(job.getId()).companyName(job.getCompanyName()).role(job.getRole()).createdAt(LocalDateTime.now()).build();
+        JobDeleteEvent jobDeleteEvent=JobDeleteEvent.builder().jobId(job.getId()).companyName(job.getCompanyName()).role(job.getRole()).createdAt(LocalDateTime.now()).eventId(UUID.randomUUID()).build();
         publisher.publishJobDeletedEvent(jobDeleteEvent);
     }
 
@@ -164,7 +163,7 @@ public class JobServiceImpl implements JobService {
 
     }
 
-    // 🔁 Mappers
+    // Mappers
 
     private Job mapToEntity(JobDto dto) {
         return Job.builder()

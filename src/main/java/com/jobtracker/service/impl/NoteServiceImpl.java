@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +45,8 @@ public class NoteServiceImpl implements NoteService
         var result= noteRepository.save(note);
 
         NotesEvent notesEvent=NotesEvent.builder().noteId(result.getId()).type(result.getType())
-                .jobId(result.getJob().getId()).role(result.getJob().getRole()).companyName(result.getJob().getCompanyName()).localDateTime(LocalDateTime.now()).build();
+                .jobId(result.getJob().getId()).role(result.getJob().getRole()).companyName(result.getJob().getCompanyName()).localDateTime(LocalDateTime.now())
+                .eventId(UUID.randomUUID()).build();
         publisher.publishNoteCreate(notesEvent);
         return  result;
     }

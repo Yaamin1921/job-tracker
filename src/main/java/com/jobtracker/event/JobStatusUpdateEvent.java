@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class JobStatusUpdateEvent implements Serializable {
+    private UUID eventId;
     private Long jobId;
     private String currentStatus;
     private String newStatus;
