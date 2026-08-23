@@ -8,6 +8,7 @@ import com.jobtracker.event.JobDeleteEvent;
 import com.jobtracker.event.JobStatusUpdateEvent;
 import com.jobtracker.repository.ActivityRepository;
 import com.jobtracker.service.ProcessedEventService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -27,6 +28,7 @@ public class ActivityConsumer {
     private final ProcessedEventService  processedEventService;
 
      @RabbitHandler
+     @Transactional
     public void handle(JobCreatedEvent event) {
          if (processedEventService.isAlreadyProcessed(event.getEventId())) {
              return;
@@ -46,6 +48,7 @@ public class ActivityConsumer {
 
     }
     @RabbitHandler
+    @Transactional
     public void handle(JobStatusUpdateEvent event) {
         if (processedEventService.isAlreadyProcessed(event.getEventId())) {
             return;
@@ -65,6 +68,7 @@ public class ActivityConsumer {
 
 
     }
+    @Transactional
     @RabbitHandler
     public void handle(JobDeleteEvent jobDeleteEvent) {
         if (processedEventService.isAlreadyProcessed(jobDeleteEvent.getEventId())) {

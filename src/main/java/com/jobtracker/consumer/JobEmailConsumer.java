@@ -1,17 +1,21 @@
 package com.jobtracker.consumer;
 
 import com.jobtracker.config.RabbitMQConfig;
+import com.jobtracker.entity.EmailStatus;
+import com.jobtracker.event.EmailEvent;
 import com.jobtracker.event.JobCreatedEvent;
 import com.jobtracker.event.JobDeleteEvent;
 import com.jobtracker.event.JobStatusUpdateEvent;
+import com.jobtracker.service.EmailProcessService;
 import com.jobtracker.service.EmailService;
-import com.jobtracker.service.ProcessedEventService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -23,12 +27,9 @@ public class JobEmailConsumer {
     private EmailService emailService;
     private static final String EMAIL="yaamin1921413@gmail.com";
     @Autowired
-    private final ProcessedEventService processedEventService;
+    private final EmailProcessService emailEventService;
     @RabbitHandler
     public void handle(JobCreatedEvent event) {
-        if (processedEventService.isAlreadyProcessed(event.getEventId())) {
-            return;
-        }
 
         String subject = "Job added Successfully ";
         String body = """
@@ -47,17 +48,12 @@ public class JobEmailConsumer {
                 event.getCompanyName(),
                 event.getRole()
         );
-
-        emailService.sendEmail( EMAIL,subject, body);
-        processedEventService.markAsProcessed(event.getEventId());
-
+        emailEventHandle(subject,body,event.getEventId());
 
     }
     @RabbitHandler
     public void handle(JobStatusUpdateEvent event) {
-        if (processedEventService.isAlreadyProcessed(event.getEventId())) {
-            return;
-        }
+
         String subject = "Job Status updated Successfully ";
         String body = """
             Hello,
@@ -76,17 +72,11 @@ public class JobEmailConsumer {
                 event.getJobId()
         );
 
-        emailService.sendEmail( EMAIL,subject, body);
-        processedEventService.markAsProcessed(event.getEventId());
-
-
-
+        emailEventHandle(subject,body,event.getEventId());
     }
     @RabbitHandler
     public void handle(JobDeleteEvent event) {
-        if (processedEventService.isAlreadyProcessed(event.getEventId())) {
-            return;
-        }
+
             String subject = "Job Deleted Successfully ";
         String body = """
             Hello,
@@ -105,8 +95,36 @@ public class JobEmailConsumer {
                 event.getJobId()
         );
 
-            emailService.sendEmail( EMAIL,subject, body);
-        processedEventService.markAsProcessed(event.getEventId());
+         emailEventHandle(subject,body,event.getEventId());
 
     }
+
+    public void emailEventHandle(String subject,String body, UUID eventId){
+        EmailEvent emailEvent =
+                emailEventService.getOrCreate(eventId);
+
+        if (emailEvent.getStatus() == EmailStatus.SENT) {
+            log.info("Email already sent for event {}", eventId);
+            return;
+        }
+
+        try {
+            emailEventService.markProcessing(eventId);
+            emailService.sendEmail(
+                    EMAIL,
+                    subject,
+                    body
+            );
+            emailEventService.markSent(eventId);
+
+        } catch (Exception e) {
+            emailEventService.markFailed(
+                    eventId,
+                    e.getMessage()
+            );
+            throw e;
+        }
+
+    }
+
 }
