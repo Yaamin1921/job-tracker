@@ -1,8 +1,10 @@
 package com.jobtracker.controller;
 
 
+import com.jobtracker.dto.LoginRequest;
 import com.jobtracker.dto.RegisterRequest;
 import com.jobtracker.service.UserService;
+import com.jobtracker.service.impl.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,11 @@ import java.util.Map;
 public class AuthController {
 
     private final UserService userService;
+    private final AuthenticationService authenticationService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, AuthenticationService authenticationService) {
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @PostMapping("/register")
@@ -36,4 +40,16 @@ public class AuthController {
                         "User registered successfully"
                 ));
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        String token = authenticationService.login(request);
+
+        return ResponseEntity.ok(
+                Map.of("accessToken", token)
+        );
+    }
+
 }
