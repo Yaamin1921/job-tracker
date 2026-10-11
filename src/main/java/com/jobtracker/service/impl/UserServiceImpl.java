@@ -2,6 +2,7 @@ package com.jobtracker.service.impl;
 
 import com.jobtracker.dto.RegisterRequest;
 import com.jobtracker.entity.User;
+import com.jobtracker.enums.Role;
 import com.jobtracker.repository.UserRepository;
 import com.jobtracker.service.UserService;
 import jakarta.transaction.Transactional;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
 
         User user = new User();
         user.setEmail(email);
+        user.setRole(Role.USER);
 
         // Never save the plain-text password.
         user.setPassword(

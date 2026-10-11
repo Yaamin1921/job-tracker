@@ -37,6 +37,7 @@ public class CustomUserDetailsService
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(java.util.List.of())
+                .roles(user.getRole().name())
                 .disabled(!user.isEnabled())
                 .build();
     }
