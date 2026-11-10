@@ -1,10 +1,15 @@
 package com.jobtracker.service.impl;
 
 import com.jobtracker.dto.RegisterRequest;
+import com.jobtracker.entity.Job;
 import com.jobtracker.entity.User;
+import com.jobtracker.repository.JobRepository;
 import com.jobtracker.repository.UserRepository;
 import com.jobtracker.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +18,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JobRepository jobRepository;
 
     public UserServiceImpl(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            JobRepository jobRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jobRepository=jobRepository;
     }
 
     @Override
@@ -44,5 +52,16 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
 
         userRepository.save(user);
+    }
+    private Job getJobOwnedByUser(Long jobId, String email) {
+        Job job = jobRepository.findById(jobId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Job not found"));
+
+        if (!job.getOwner().getEmail().equalsIgnoreCase(email)) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        return job;
     }
 }

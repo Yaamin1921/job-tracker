@@ -30,6 +30,7 @@ public class JobServiceImpl implements JobService {
     private final ActivityRepository activityRepository;
     private final JobEventPublisher publisher;
     private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     private static final EnumMap<JobStatus, Set<JobStatus>> allowedTransitions = new EnumMap<>(JobStatus.class);
 
@@ -106,7 +107,9 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobDto> getAllJobs() {
-        return jobRepository.findAll()
+
+        User currentUser=authenticationService.getCurrentUser();
+        return jobRepository.findAllByOwner_Id(currentUser.getId())
                 .stream()
                 .map(this::mapToDto)
                 .toList();
