@@ -2,19 +2,20 @@ package com.jobtracker.service.impl;
 
 import com.jobtracker.dto.ActivityDto;
 import com.jobtracker.dto.JobDto;
-import com.jobtracker.entity.Activity;
-import com.jobtracker.entity.ActivityType;
-import com.jobtracker.entity.Job;
-import com.jobtracker.entity.JobStatus;
+import com.jobtracker.entity.*;
 import com.jobtracker.event.JobCreatedEvent;
 import com.jobtracker.event.JobDeleteEvent;
 import com.jobtracker.event.JobStatusUpdateEvent;
 import com.jobtracker.publisher.JobEventPublisher;
 import com.jobtracker.repository.ActivityRepository;
 import com.jobtracker.repository.JobRepository;
+import com.jobtracker.repository.UserRepository;
 import com.jobtracker.service.JobService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final ActivityRepository activityRepository;
     private final JobEventPublisher publisher;
+    private final UserRepository userRepository;
 
     private static final EnumMap<JobStatus, Set<JobStatus>> allowedTransitions = new EnumMap<>(JobStatus.class);
 
@@ -68,9 +70,14 @@ public class JobServiceImpl implements JobService {
     public List<JobDto> createJob(List<JobDto> jobDto) {
 
         List<Job> savedJobs=new ArrayList<>();
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        String email=authentication.getName();
+        User currentUser=userRepository.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("User not found"));
 
         for(JobDto jobDto1:jobDto) {
             Job job = mapToEntity(jobDto1);
+            job.setOwner(currentUser);
             Job savedJob = jobRepository.save(job);
             savedJobs.add(savedJob);
 
