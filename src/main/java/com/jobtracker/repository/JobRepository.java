@@ -11,4 +11,5 @@ public interface JobRepository extends JpaRepository<Job,Long> {
         long countByStatus(JobStatus status);
 
         long countByStatusIn(List<JobStatus> statuses);
+        List<Job> findAllByOwner_Id(long userId);
 }
