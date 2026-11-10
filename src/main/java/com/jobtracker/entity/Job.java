@@ -19,6 +19,10 @@ public class Job extends BaseJobEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name="user_id",nullable = false)
+    private User owner;
+
     private String companyName;
     private String role;
    // private String status;
