@@ -117,14 +117,16 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobDto getJobById(Long id) {
-        Job job = jobRepository.findById(id)
+        User currentUser=authenticationService.getCurrentUser();
+        Job job = jobRepository.findByIdAndOwner(id,currentUser.getId())
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
         return mapToDto(job);
     }
 
     @Override
     public JobDto updateJobStatus(Long jobId, JobStatus newStatus) {
-        Job job = jobRepository.findById(jobId)
+        User currentUser=authenticationService.getCurrentUser();
+        Job job = jobRepository.findByIdAndOwner(jobId,currentUser.getId())
                 .orElseThrow(() -> new RuntimeException("Job not found with id: " + jobId));
 
         JobStatus currentStatus = job.getStatus();
@@ -159,7 +161,8 @@ public class JobServiceImpl implements JobService {
         /*if (!jobRepository.existsById(id)) {
             throw new RuntimeException("Job not found with id: " + id);
         }*/
-        var job=jobRepository.findById(id).orElseThrow(()-> new RuntimeException("Job not found with id: " + id));
+        User currentUser=authenticationService.getCurrentUser();
+        var job=jobRepository.findByIdAndOwner(id,currentUser.getId()).orElseThrow(()-> new RuntimeException("Job not found with id: " + id));
         jobRepository.deleteById(id);
         JobDeleteEvent jobDeleteEvent=JobDeleteEvent.builder().jobId(job.getId()).companyName(job.getCompanyName()).role(job.getRole()).createdAt(LocalDateTime.now()).eventId(UUID.randomUUID()).build();
         publisher.publishJobDeletedEvent(jobDeleteEvent);
@@ -167,6 +170,9 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<ActivityDto> getTimeline(Long id) {
+        User currentUser=authenticationService.getCurrentUser();
+        Job job = jobRepository.findByIdAndOwner(id,currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("Job not found with id: " + id));
         var activities=activityRepository.findByJobIdOrderByTimestampDesc(id);
         var activityDtoList=activities.stream().map(entity->mapper.map(entity,ActivityDto.class)).toList();
         return activityDtoList;
